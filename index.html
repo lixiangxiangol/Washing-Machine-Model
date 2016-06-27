@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="CSS/style.css"/>
+    <link rel="stylesheet" href="CSS/bootstrap.css"/>
+    <script src="JS/jquery.js"></script>
+    <title></title>
+</head>
+<body>
+    <embed src="http://yuntv.letv.com/bcloud.swf" allowfullscreen="true" quality="high" id="embed"
+           allowscriptaccess="always" flashvars="uu=fb7b745c6e&amp;vu=30d2814de5&amp;auto_play=1&amp;gpcflag=1&amp;width=640&amp;height=360"
+           type="application/x-shockwave-flash" align="middle" height="400" width="420">
+    <div id="div_img">
+        <img src="images/1.png" id="img_1" onclick="animation()">
+        <img src="images/liquid.png" id="img_2" class="start">
+        <img src="images/Clothes.png" id="img_3" class="start">
+
+        <div class="right" style="width: 100px;height: 130px;
+        position: absolute;right: 200px;top: 200px;z-index: 0" role="group">
+            <button type="button" class="btn btn-lg" id="btn1" style="border: none;">
+                <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>  空闲
+            </button>
+            <button type="button" class="btn btn-lg" id="btn2" style="border: none">
+                <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>  工作
+            </button>
+            <button type="button" class="btn btn-lg" id="btn3" style="border: none">
+                <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>  故障
+            </button>
+        </div>
+    </div>
+
+    <canvas id="canvas" style="position: absolute;bottom: 0;right: -100px;
+    width: 500px;display: none">
+        当前浏览器不支持Canvas，请更换浏览器后再试
+    </canvas>
+</body>
+<script src="JS/digit.js"></script>
+<script src="JS/countdown.js"></script>
+<script>
+    var g= function (id) {
+        return document.getElementById(id)
+    };
+
+    var img_1=g('img_1');
+    var img_2=g('img_2');
+    var img_3=g('img_3');
+    var btn1=g('btn1');
+    var btn2=g('btn2');
+    var btn3=g('btn3');
+    var embed=g('embed');
+    var canvas=g('canvas');
+
+    /*时间轴对象构造器*/
+    var Timeline=function(){
+        this.order=[];//动画序列
+        this.add= function (timeout,func,log) {
+            this.order.push({
+                timeout:timeout,
+                func:func,
+                log:log
+            });
+        };
+
+        //支持快进
+        this.start=function(ff){
+            for(s in this.order){
+                (function(me){
+                    var fn=me.func;
+                    var timeout=me.timeout;
+                    var log=me.log;
+                    timeout=Math.max(timeout-(ff||0),0);
+
+                    setTimeout(fn,timeout);
+                    setTimeout(function(){
+                        console.log('time->',timeout,'log->',log);
+                    },timeout);
+                })(this.order[s])
+            }
+        }
+    };
+
+    var s1=new Timeline();
+
+    function animation(){
+        img_1.className='rotateY';
+        s1.start();
+    }
+    s1.add(1200,function(){
+        img_1.src='images/2.jpg';
+        img_1.className='';
+    });
+    s1.add(2400,function(){
+        img_1.className='rotateZ';
+    });
+    s1.add(3600,function(){
+        img_1.className='';
+        img_1.src='images/3.jpg';
+    });
+    s1.add(4800,function(){
+        img_3.className='end';
+    });
+    s1.add(6500,function(){
+/*        img_3.style.opacity='0';*/
+    });
+    s1.add(7700,function(){
+        img_2.className='end2';
+    });
+    s1.add(9400,function(){
+        img_2.style.opacity='0';
+    });
+    s1.add(10600, function () {
+        img_1.className='rotateZ';
+        img_3.style.display='none';
+    });
+    s1.add(11800, function () {
+        img_1.className='';
+        img_1.src='images/5.jpg';
+    });
+    s1.add(13000, function () {
+        btn2.className+=' work';
+        img_1.className='rock';
+        canvas.style.display='block';
+    });
+    s1.add(24000, function () {
+/*        embed.style.display='block';*/
+        img_1.className='';
+        btn1.className+=' free';
+        btn2.className+=' no';
+        alert('洗衣完成');
+    });
+</script>
+</html>

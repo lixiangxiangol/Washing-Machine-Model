@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="CSS/bootstrap.css"/>
+    <link rel="stylesheet" href="CSS/main.css"/>
+    <script src="JS/jquery.js"></script>
+    <script src="JS/bootstrap.js"></script>
+    <title></title>
+</head>
+<body>
+    <div class="container-fluid" id="container">
+        <div class="row">
+            <div class="col-md-3" onclick="c(this)">
+                <a><img src="images/1.png"><p class="free">1</p></a>
+            </div>
+            <div class="col-md-3" onclick="c(this)">
+                <a><img src="images/1.png"><p class="busy">2</p></a>
+            </div>
+            <div class="col-md-3" onclick="c(this)">
+                <a><img src="images/1.png"><p class="free">3</p></a>
+            </div>
+            <div class="col-md-3" onclick="c(this)">
+                <a><img src="images/1.png"><p class="free">4</p></a>
+            </div>
+            <div class="col-md-3" onclick="c(this)">
+                <a><img src="images/1.png"><p class="free">5</p></a>
+            </div>
+            <div class="col-md-3" onclick="c(this)">
+                <a><img src="images/1.png"><p class="free">6</p></a>
+            </div>
+            <div class="col-md-3" onclick="c(this)">
+                <a><img src="images/1.png"><p class="busy">7</p></a>
+            </div>
+            <div class="col-md-3" onclick="c(this)">
+                <a><img src="images/1.png"><p class="free">8</p></a>
+            </div>
+        </div>
+    </div>
+
+    <iframe id="if" style="width: 100%;height: 100%;display: none"
+            scrolling="no" frameborder="false" src="index2.html"></iframe>
+</body>
+
+<script>
+    /*时间轴对象构造器*/
+    var Timeline=function(){
+        this.order=[];//动画序列
+        this.add= function (timeout,func,log) {
+            this.order.push({
+                timeout:timeout,
+                func:func,
+                log:log
+            });
+        };
+
+        //支持快进
+        this.start=function(ff){
+            for(s in this.order){
+                (function(me){
+                    var fn=me.func;
+                    var timeout=me.timeout;
+                    var log=me.log;
+                    timeout=Math.max(timeout-(ff||0),0);
+
+                    setTimeout(fn,timeout);
+                    setTimeout(function(){
+                        console.log('time->',timeout,'log->',log);
+                    },timeout);
+                })(this.order[s])
+            }
+        }
+    };
+    var s1=new Timeline();
+    var container=document.getElementById('container');
+    var ifr=document.getElementById('if');
+
+    function c(e) {
+        e.className+=' rotate';
+
+        s1.start();
+    }
+    s1.add(2000,function(){
+        container.style.display='none';
+        ifr.style.display='block';
+    });
+</script>
+</html>
